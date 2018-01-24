@@ -549,11 +549,15 @@ public class IabHelper {
             }
 
             if (querySkuDetails) {
+            try {
                 r = querySkuDetails(ITEM_TYPE_INAPP, inv, moreItemSkus);
                 if (r != BILLING_RESPONSE_RESULT_OK) {
                     throw new IabException(r, "Error refreshing inventory (querying prices of items).");
                 }
+            } catch (NullPointerException e) {
+                throw new IabException(IABHELPER_UNKNOWN_ERROR, "NPE while refreshing inventory.", e);
             }
+        }
 
             // if subscriptions are supported, then also query for subscriptions
             if (mSubscriptionsSupported) {
